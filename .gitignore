@@ -1,4 +1,32 @@
-_site
-.sass-cache
-Gemfile.lock
-*.gem
+node_modules
+
+# Output
+.output
+.vercel
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Jetbrains
+.idea
+.idea/*
+/.idea
+/.idea/*
+
+# Blog template
+.histoire
+.jampack
+/package
