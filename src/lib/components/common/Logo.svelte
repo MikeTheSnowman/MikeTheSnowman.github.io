@@ -15,10 +15,10 @@
 			xml:space="preserve"
 			id="text"
 			transform="translate(-278.77228,-206.83728)"
-			><tspan x="275.57227" y="292.17088" id="tspan1319"
+			><tspan x="275" y="297" id="tspan1319"
 				><tspan
 					style="font-size:106.667px;font-family:YoungSerif;"
-					id="tspan1317">Eat & Learn ;)</tspan
+					id="tspan1317">Mike's Blog ✌️</tspan
 				></tspan
 			></text
 		>
