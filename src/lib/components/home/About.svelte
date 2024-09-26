@@ -6,12 +6,20 @@
 	<div class="info">
 		<h2>
 			Hey, my name is Mike.<br>
-			I like <SparklingHighlight color="secondary">tech</SparklingHighlight> and <SparklingHighlight color="secondary">tinkering</SparklingHighlight>.
+			I like <SparklingHighlight color="secondary">tech</SparklingHighlight> and
+			<SparklingHighlight color="secondary">tinkering</SparklingHighlight>.
 		</h2>
 		<p>
-			I've been working in the AppSec space for the better part of 10 years, but I've had the good fortune to dabble in a long list of other things including, but not limited to: electronics, 3D modeling, game design/development, 3D printing, electronics, rock climbing, MMA, manufacturing, biology, enterprise app development, (I hate to admit it) AI app development, reverse engineering, and a few other things.
-			<br>
-			I'm hoping that in this little corner of the web, I can (not loose the motivation to) share some of the things I've learned over the years. Hopefully, there are others out there who find these topics interesting as well, and who knows... Maybe it'll help someone with their own projects.
+			I've been working in the AppSec space for over 10 years, but I've had the good fortune to
+			dabble in a long list of other things including, but not limited to: electronics, 3D modeling,
+			game design/development, 3D printing, electronics, rock climbing, MMA, manufacturing, biology,
+			enterprise app development, (I hate to admit it) AI app development, reverse engineering, and
+			a few other things.
+			<br><br>
+			I'm hoping that in this little corner of the web, I can share some of the things I've learned
+			over the years. Hopefully, what I've written is accurate, and I also hope there are others out
+			there who find these topics interesting as as I do. And who knows... Maybe it'll help someone
+			with their own projects.
 			<br>
 			I generally don't bite, so feel free to ping me on LinkedIn.
 		</p>
