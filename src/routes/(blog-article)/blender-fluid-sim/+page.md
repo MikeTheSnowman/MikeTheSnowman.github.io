@@ -1,7 +1,7 @@
 ---
 title: Blender fluid simulation
 slug: blender-fluid-sim
-coverImage: /images/posts/blog-posts.jpg
+coverImage: /images/posts/blender-fluid/blender-fluid.gif
 date: 2024-09-25T01:00:00.000Z
 excerpt: How to simulate fluids in Blender
 tags:

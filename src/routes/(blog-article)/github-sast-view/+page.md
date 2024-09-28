@@ -3,7 +3,7 @@ slug: github-sast-view
 title: Viewing SAST results in GitHub
 date: 2024-09-25T01:00:00.000Z
 excerpt: Viewing SAST results in GitHub
-coverImage: /images/posts/project-structure.jpg
+coverImage: /images/posts/github-sast/github-sast.webp
 tags:
   - How-To
 ---

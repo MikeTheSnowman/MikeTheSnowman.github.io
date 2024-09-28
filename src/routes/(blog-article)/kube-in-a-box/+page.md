@@ -3,7 +3,7 @@ slug: kube-in-a-box
 title: Local Kubernetes options for your lab
 date: 2024-09-25T01:00:00.000Z
 excerpt: Exploring options for setting up kubernetes for a lab environment
-coverImage: /images/posts/customization.jpg
+coverImage: /images/posts/kubernetes-in-a-box/kubernetes-in-a-box.webp
 tags:
   - Article
 ---
