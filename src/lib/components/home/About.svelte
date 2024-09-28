@@ -1,5 +1,7 @@
 <script>
 	import SparklingHighlight from '$lib/components/common/SparklingHighlight.svelte';
+
+	let imageTooltip = "My mom tells me that I look handsome... Some times..."
 </script>
 
 <section id="about">
@@ -20,7 +22,7 @@
 			over the years. Hopefully, what I've written is accurate, and I also hope there are others out
 			there who find these topics interesting as as I do. And who knows... Maybe it'll help someone
 			with their own projects.
-			<br>
+			<br><br>
 			I generally don't bite, so feel free to ping me on LinkedIn.
 		</p>
 	</div>
@@ -28,7 +30,8 @@
 		<img
 				class="image"
 				src="/images/LinkedIn-Profile-Pic.jpg"
-				alt="My mom tells me that I look handsome... Some times..."
+				alt="{imageTooltip}"
+				title="{imageTooltip}"
 		/>
 	</div>
 </section>
