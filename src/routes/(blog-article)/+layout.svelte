@@ -75,12 +75,6 @@
                 <slot />
             </div>
         </article>
-
-        <!--{#if post.relatedPosts && post.relatedPosts.length > 0}-->
-        <!--    <div class="container">-->
-        <!--        <RelatedPosts posts={post.relatedPosts} />-->
-        <!--    </div>-->
-        <!--{/if}-->
     </main>
 
     <Footer />
