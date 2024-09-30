@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
+	// import { i } from '../../../../build/_app/immutable/chunks/meta.CRspn0T0';
 
 	export let src: string;
 	export let alt: string;
@@ -9,6 +10,7 @@
 	export let widths: string[] | undefined = undefined;
 
 	$: fileName = src.split('.')[0];
+	$: fileType = src.split('.')[1];
 
 	function buildSrcset() {
 		if (dev) return;
@@ -33,6 +35,9 @@
 			}
 		}
 
+		if (fileType === "gif"){
+			srcset = "";
+		}
 		return srcset;
 	}
 </script>

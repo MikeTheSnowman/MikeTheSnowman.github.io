@@ -15,10 +15,8 @@
 		"story:preview": "histoire preview",
 		"optimize-images": "image-transmutation --run --sourceFolder ./build/images --targetFolder ./build/images --inputFormats 'gif' --inputFormats 'webp' --inputFormats 'jpg' --inputFormats 'jpeg' --inputFormats 'png' --outputFormats 'png' --outputFormats 'webp' --outputFormats 'avif'",
 		"optimize-images-windows": "powershell -C \"image-transmutation --run --sourceFolder ./build/images --targetFolder ./build/images --inputFormats 'gif' --inputFormats 'webp' --inputFormats 'jpg' --inputFormats 'jpeg' --inputFormats 'png' --outputFormats 'png' --outputFormats 'webp' --outputFormats 'avif'\"",
-		"postbuild": "npm run optimize-images && svelte-sitemap --domain https://sveltekit-static-blog-template.vercel.app/",
-		"vercel-sitemap": "svelte-sitemap --out-dir .vercel/output/static --domain https://sveltekit-static-blog-template.vercel.app/",
-		"vercel-optimize-images": "image-transmutation --run --sourceFolder '.vercel/output/static/images' --targetFolder '.vercel/output/static/images' --inputFormats 'gif' --inputFormats 'webp' --inputFormats 'jpg' --inputFormats 'jpeg' --inputFormats 'png' --outputFormats 'png' --outputFormats 'webp' --outputFormats 'avif'",
-		"vercel-build": "npm run build && npm run vercel-sitemap && npm run vercel-optimize-images"
+		"copy-gifs": "npx copyfiles -u 4 \"./static/images/posts/**/*.gif\" \"./build/images/\"",
+		"postbuild": "npm run optimize-images && npm run copy-gifs && svelte-sitemap --domain https://mikethesnowman.github.io/"
 	},
 	"devDependencies": {
 		"@histoire/plugin-svelte": "^0.17.17",
@@ -28,6 +26,7 @@
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/dateformat": "^5.0.2",
 		"@types/eslint": "^9.6.0",
+		"copyfiles": "^2.4.1",
 		"dateformat": "^5.0.3",
 		"eslint": "^9.0.0",
 		"eslint-config-prettier": "^9.1.0",
