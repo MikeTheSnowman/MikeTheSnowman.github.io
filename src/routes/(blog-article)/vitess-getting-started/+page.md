@@ -273,6 +273,37 @@ mysql < ../common/insert_commerce_data.sql
 mysql --table < ../common/select_commerce_data.sql
 ```
 
+At this point now, we have a single keyspace called "commerce" with some data populated inside of it.
 
+## Step 5 - Create second keyspace and migrate data
+And at long last everyone, we get to see the cool stuff. This is where we create our second keyspace to move data into.
+The second keyspace will be called `customer`.
+
+Next, we'll be moving the tables `customer` and `corder` from the `commerce` keyspace into the in to the newly created 
+`customer` keyspace.
+
+The last major steps are that we validate the tables that were moved followed by redirecting all new read/write 
+operations to our 
+```bash
+# Bring up customer keyspace
+kubectl apply -f 201_customer_tablets.yaml
+
+# Initiate move tables
+vtctldclient MoveTables --workflow commerce2customer --target-keyspace customer create --source-keyspace commerce \
+--tables "customer,corder"
+
+# Validate
+vtctldclient vdiff --workflow commerce2customer --target-keyspace customer create
+vtctldclient vdiff --workflow commerce2customer --target-keyspace customer show last
+
+# Cut-over
+vtctldclient MoveTables --workflow commerce2customer --target-keyspace customer switchtraffic --tablet-types "rdonly,replica"
+vtctldclient MoveTables --workflow commerce2customer --target-keyspace customer switchtraffic --tablet-types primary
+
+# Clean-up
+vtctldclient MoveTables --workflow commerce2customer --target-keyspace customer complete
+```
+
+## Step 6 - Resharding
 
 (More to be added later...)
