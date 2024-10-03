@@ -49,11 +49,12 @@ matter to me because I'll be using MySQL.
 
 ## References and documentation:
 - [Vitess v20 documentation](https://vitess.io/docs/20.0/)
-- [Vitess operator schema spec](https://github.com/planetscale/vitess-operator/blob/main/docs/api.md#planetscale.com/v2.VitessKeyspaceSpec)
+- [Vitess operator schema spec](https://github.com/planetscale/vitess-operator/blob/e4992b7e512f76d9f221c9bd89735c88c2876006/docs/api/index.html)
+- [Another reference for Vitess operator schema spec](https://github.com/planetscale/vitess-operator/blob/main/docs/api.md#planetscale.com/v2.VitessKeyspaceSpec)
 - [Vitess blog post about VTAdmin](https://vitess.io/blog/2022-12-05-vtadmin-intro/)
 
 
-## Key Vitess concepts
+## Vitess concepts
 Before getting into the technical setup, there is some new Vitess specific terminology/concepts that we need to be aware
 of, so we don't get confused. Later on when you're reading this guide, feel to come back here when there's a term being 
 that you feel unfamiliar with. Please note that all of these definitions are directly copied from the Vitess 
@@ -169,7 +170,9 @@ In this directory, you will see a group of yaml files/ The first digit ofeach fi
 example. The next two digits indicate the order in which to execute them. For example, `101_initial_cluster.yaml` is the
 first file of the first phase.
 <br><br>
+
 I'll explain later what's going on in this file, but for now, just execute it:
+
 ```bash
 kubectl apply -f 101_initial_cluster.yaml
 ```
@@ -180,14 +183,96 @@ At a high level here's what's being created:
   being described are things being created within our cluster.
   - One `cell`, called `zone1` is being created. Vitess needs to associate resources within a cluster, to belong to a 
     `cell`. At a high level, you can think of a `cell` as kind of like an "availability zone". For a deeper explanation
-    on what a `cell` is in Vitess, see the section `Key Vitess concepts` in this guide.
+    on what a `cell` is in Vitess, see the section [Vitess concepts](/vitess-getting-started/#vitess-concepts) in this 
+    guide. 
+    - Within out cell, the yaml will also create a single gateway (`vtgate`) and single user account based on the 
+      information in the kubernetes secret `example-cluster-config`. It's important to note that this user account will
+      effectively be your MySQL DB user account. What happens is that you'll use a MySQL client like `mysql`, a MySQL
+      database driver, or MySQL Workbench to connect to your database (keyspace). The key thing to remember is that it's
+      the gateway that's aware of the user account information, and it's also the gateway that knows the mapping of user
+      accounts to their respective databases. So that also means that when you use your DB account credentials to
+      connect and authenticate, you're authenticating with the gateway, not the MySQL DB directly.
   - With `vitessDashboard`, `vtctld` will be deployed into our cell (zone1). `vtctld` is an HTTP server that lets you 
     browse the information stored in the Topology Service. It is useful for troubleshooting or for getting a high-level 
     overview of the servers and their current states. 
     `vtctld` also acts as the server for `vtctldclient` connections.
   - With `vtadmin`, it provides both a web client and API for managing multiple Vitess clusters, and is the successor to 
-    the now-deprecated UI for vtctld. `vtadmin` will get deployed into our `cell` called "zone1".
-  - With `keyspaces`,  we define the logical databases to deploy. In our case, we are deploying a single keyspace into
-    our cell, zone1, with just a single partition that has two replicas.
+    the now-deprecated UI for `vtctld`. `vtadmin` will get deployed into our `cell` called "zone1". The RBAC config that
+    gets applied is defined in a kubernetes secret called `example-cluster-config`.
+  - This is where things get interesting. With `keyspaces`,  we define the logical databases to deploy. In our case, we 
+    are deploying a single keyspace (database) called "commerce". Within the keyspace attribute, we are deploying a few
+    other things.
+    - Within the keyspace, a single Vitess Orchestrator (`vtorc`) instance will be deployed. VTOrc is the automated
+    fault detection and repair tool of Vitess. It started off as a fork of the
+    [Orchestrator](https://github.com/openark/orchestrator), which was then custom-fitted to the Vitess use-case running
+    as a Vitess component. An overview of the architecture of VTOrc can be found on this
+    [page](https://vitess.io/docs/20.0/reference/vtorc/architecture). Setting up VTOrc lets you avoid performing the
+    InitShardPrimary step. It automatically detects that the new shard doesn't have a primary and elects one for you.
+  - With the `partitionings` attribute, we define a set of shards by dividing the keyspace into key ranges. Each field 
+    is a different method of dividing the keyspace. Only one field should be set on a given partitioning.
+    - Then with the `equal` attribute, we are saying that there are equal partitioning splits of the keyspace into some 
+      number of equal parts, assuming that the keyspace IDs are uniformly distributed, for example because they’re 
+      generated by a hash vindex.
+      - `parts` is the number of equal parts to split the keyspace into. If you need shards that are not equal-sized, use 
+        custom partitioning instead. Note that if the number of parts is not a power of 2, the key ranges will only be 
+        roughly equal in size.
+      - Within `shardTemplate` we specify our user-specified parts (options) of a VitessShard object.
+        - `databaseInitScriptSecret` allows us to run a sql script at the time this shard initialized. This SQL script
+          file, which is stored in a kubernetes secret, is executed immediately after bootstrapping an empty database to
+          set up initial tables and other MySQL-level entities needed by Vitess.
+        - `tabletPools` specify individual pools. A pool is a group of tablets in a given cell with a certain tablet 
+          type and a shared configuration template, and are ideally all used for a similar purpose. There must be at 
+          most one pool in this list for each (cell,type) pair. Each shard must have at least one “replica” pool (in at
+          least one cell) in order to be able to serve. Within the tablet pool, we must define at least one pool. Each 
+          pool must specify:
+          - Which cell to be deployed into.
+          - What type of pool it is. The allowed types are “replica” for master-eligible replicas that serve
+            transactional (OLTP) workloads; and “rdonly” for master-ineligible replicas (can never be promoted to 
+            master) that serve batch/analytical (OLAP) workloads.
+          - The number of replica tablets to deploy in this pool. This field is required, although it may be set to 0, 
+            which will scale the pool down to 0 tablets.
+          - The vttablet configuration that should be used by all vttablets in the pool
+          - The configuration of the locally running MySQL running inside each tablet Pod. You must specify either 
+            Mysqld or ExternalDatastore, but not both.
+          - And finally, `dataVolumeClaimTemplate` configures the PersistentVolumeClaims that will be created for each 
+            tablet to store its database files. This field is required for local MySQL, but should be omitted in the 
+            case of externally managed MySQL.
+            <p>IMPORTANT: If your Kubernetes cluster is multi-zone, you must set a storageClassName here for a 
+            StorageClass that’s configured to only provision volumes in the same zone as this tablet pool.</p>
+        
+        WARNING: DO NOT change the number of parts in a partitioning after deploying. That’s effectively deleting the 
+        old partitioning and adding a new one, which can lead to downtime or data loss. Instead, add an additional 
+        partitioning with the desired number of parts, perform a resharding migration, and then remove the old 
+        partitioning. 
+
+  - Finally, the `updateStrategy`. This specifies the strategy that the Vitess operator will use to perform updates of 
+    components in the Vitess cluster when a revision is made to the VitessCluster spec. Supported options are:
+    - External: Schedule updates on objects that should be updated, but wait for an external tool to release them by 
+      adding the ‘rollout.planetscale.com/released’ annotation.
+    - Immediate: Release updates to all cells, keyspaces, and shards as soon as the VitessCluster spec is changed. 
+      Perform rolling restart of one tablet Pod per shard at a time, with automatic planned reparents whenever possible 
+      to avoid master downtime.
+    - IMPORTANT NOTE: the default is `External`
+
+
+## Step 4 - Port forward Vitess services & populate commerce keyspace
+```bash
+# Port-forward vtctld, vtgate and vtadmin and apply schema and vschema
+# VTAdmin's UI will be available at http://localhost:14000/
+./pf.sh &
+# Aliasing the main commands to avoid repeating common options
+alias mysql="mysql -h 127.0.0.1 -P 15306 -u user"
+alias vtctldclient="vtctldclient --server localhost:15999 --alsologtostderr"
+
+# Apply schema and vschema
+vtctldclient ApplySchema --sql="$(cat create_commerce_schema.sql)" commerce
+vtctldclient ApplyVSchema --vschema="$(cat vschema_commerce_initial.json)" commerce
+
+# Insert and verify data
+mysql < ../common/insert_commerce_data.sql
+mysql --table < ../common/select_commerce_data.sql
+```
+
+
 
 (More to be added later...)
