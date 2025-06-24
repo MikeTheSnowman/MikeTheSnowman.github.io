@@ -3,7 +3,7 @@ slug: LineageOS-22_2-Samsung-S20-FE-5G
 title: Installing LineageOS 22.2 on Samsung S20 FE 5G (SM-G781B)
 date: 2025-06-24T01:00:00.000Z
 excerpt: The topic is in the title. But also, this is actually part-1 in my journey to trying to use my phone as a Klipper host to control my 3D printer
-coverImage: /images/posts/learning-vitess/learning-vitess.jpg
+coverImage: /images/posts/lineageos/LineageOS_Logo.png
 tags:
   - Guide
 ---
