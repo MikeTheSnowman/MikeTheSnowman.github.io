@@ -41,7 +41,7 @@ Samsung's One UI is a bit bloated and I wanted to try and squeeze as much perfor
 - Part 2: The next blog post will be me trying to get Klipper and Moonrake installed on my phone and connected to my printer.
 
 # One more important note!
-The **MAJORITY** of the instructions in this blog post came from LineageOS's website. I've modified portions of the documentation to provide updated links to files that were not accessible from the original documentation.
+The **MAJORITY** of the instructions in this blog post came from LineageOS's website. I've modified portions of the documentation to provide updated links to files that were not accessible from the original documentation or I have adjusted portions of the documentation to reflect exactly what I did.
 
 ## My environment
 - Workstation details:
@@ -202,4 +202,4 @@ Once you have installed everything successfully, you can now reboot your device 
 
 # Conclusion
 That wraps things up for this blog post. 
-By my estimate, I'm about half way done to getting Klipper running on my phone to start controlling my 3D printer. When I do get that last part working, I'll make a follow up post. 
+By my estimate, I'm about half way done to getting Klipper running on my phone to start controlling my 3D printer. When I do get that last part working, I'll make a follow up post. When I do, I'll update this blog post with the link to the next part.
