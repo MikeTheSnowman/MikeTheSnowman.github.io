@@ -1,0 +1,26 @@
+# Mike's Blog
+
+> This github pages site is MikeTheSnowman's blog where he makes his best effort to document and detail the personal projects that he works on. 
+> Fun side note: MikeTheSnowman has a unhealthy obsession with Mexican food even though he lives in Australia.
+
+## Blog Posts
+
+### Installing LineageOS 22.2 on Samsung S20 FE 5G (SM-G781B)
+- URL: https://mikethesnowman.github.io/LineageOS-22_2-Samsung-S20-FE-5G/
+- Description: MikeTheSnowman's custom guide to installing LineageOS 22.2 on Samsung S20 FE 5G (SM-G781B)
+
+### Learning Vitess - Getting Started
+- URL: https://mikethesnowman.github.io/vitess-getting-started/
+- Description: My little journey learning how to get started with Vitess and sharding
+
+### Blender fluid simulation
+- URL: https://mikethesnowman.github.io/blender-fluid-sim/
+- Description: How to simulate fluids in Blender. This blog post is not yet complete.
+
+### Viewing SAST results in GitHub
+- URL: https://mikethesnowman.github.io/github-sast-view/
+- Description: Viewing SAST results in GitHub. This blog post is not yet complete.
+
+### Local Kubernetes options for your lab
+- URL: https://mikethesnowman.github.io/kube-in-a-box/
+- Description: Exploring options for setting up kubernetes for a lab environment. This blog post is not yet complete.
