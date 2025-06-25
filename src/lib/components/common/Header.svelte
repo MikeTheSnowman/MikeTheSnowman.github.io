@@ -12,6 +12,7 @@
 			<Logo />
 		</a>
 		<div class="links">
+			<a href="/llms.txt">LLMs.txt</a>
 			<a href="/blog">Blog</a>
 			<RssLink />
 			<ThemeToggle />
